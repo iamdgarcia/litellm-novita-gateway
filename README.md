@@ -22,7 +22,7 @@ Railway templates are configured in Railway's template composer, not in a reposi
 
 1. Push this directory to its own GitHub repository.
 2. In [Railway Templates](https://railway.com/workspace/templates), create a template with three services:
-   - **Gateway** — this GitHub repository; enable public HTTP networking.
+   - **Gateway** — this GitHub repository; under **Settings → Networking → Public Networking**, click **Generate Domain**. Saving the template from this configured project makes every deployment receive a public Railway domain by default.
    - **PostgreSQL** — Railway's PostgreSQL service.
    - **Redis** — Railway's Redis service.
 3. Set the Gateway root directory to `/` (or `/products/litellm-novita-gateway` if publishing this monorepo).
@@ -37,7 +37,7 @@ Railway templates are configured in Railway's template composer, not in a reposi
 | `LITELLM_SALT_KEY` | `${{secret(48)}}` |
 | `STORE_MODEL_IN_DB` | `False` |
 
-5. Set the Gateway health check to `/health/liveliness`, publish, then replace the deploy button URL in this README with the generated template URL.
+5. Confirm only the Gateway has a generated public domain, set its health check to `/health/liveliness`, publish, then replace the deploy button URL in this README with the generated template URL.
 
 `LITELLM_SALT_KEY` must never be changed after deployment because it encrypts stored credentials.
 

@@ -18,6 +18,7 @@ litellm_settings:
   cache: true
   cache_params:
     type: redis
+    url: os.environ/REDIS_URL
   drop_params: true
 
 router_settings:
