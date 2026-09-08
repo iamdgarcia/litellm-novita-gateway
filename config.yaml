@@ -1,0 +1,31 @@
+model_list:
+  - model_name: fast
+    litellm_params:
+      model: novita/meta-llama/llama-3.1-8b-instruct
+      api_key: os.environ/NOVITA_API_KEY
+
+  - model_name: smart
+    litellm_params:
+      model: novita/deepseek/deepseek-v3-0324
+      api_key: os.environ/NOVITA_API_KEY
+
+  - model_name: reasoning
+    litellm_params:
+      model: novita/deepseek/deepseek-r1-turbo
+      api_key: os.environ/NOVITA_API_KEY
+
+litellm_settings:
+  cache: true
+  cache_params:
+    type: redis
+  drop_params: true
+
+router_settings:
+  routing_strategy: simple-shuffle
+  num_retries: 2
+  timeout: 120
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  database_connection_pool_limit: 10
