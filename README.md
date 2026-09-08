@@ -37,7 +37,16 @@ Railway templates are configured in Railway's template composer, not in a reposi
 | `LITELLM_SALT_KEY` | `${{secret(48)}}` |
 | `STORE_MODEL_IN_DB` | `False` |
 
-5. Confirm only the Gateway has a generated public domain, set its health check to `/health/liveliness`, publish, then replace the deploy button URL in this README with the generated template URL.
+5. Confirm only the Gateway has a generated public domain and publish. The repository already configures the health check and listening port through `railway.json`.
+
+### Railway networking defaults
+
+- **Listen address:** `0.0.0.0`
+- **Port:** Railway's injected `PORT`; defaults to `4000` outside Railway
+- **Health check:** `/health/liveliness`
+- **Public URL:** `https://${RAILWAY_PUBLIC_DOMAIN}` after **Generate Domain** is enabled on the Gateway in the template composer
+
+Railway does not support creating a public domain from `railway.json`; it must be enabled once in the template composer and is then inherited by template deployments. PostgreSQL and Redis must remain private.
 
 `LITELLM_SALT_KEY` must never be changed after deployment because it encrypts stored credentials.
 

@@ -4,7 +4,7 @@
     "builder": "DOCKERFILE"
   },
   "deploy": {
-    "startCommand": "litellm --config /app/config.yaml --port $PORT",
+    "startCommand": "litellm --config /app/config.yaml --host 0.0.0.0 --port ${PORT:-4000}",
     "healthcheckPath": "/health/liveliness",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
