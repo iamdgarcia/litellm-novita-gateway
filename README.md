@@ -26,16 +26,46 @@ Railway templates are configured in Railway's template composer, not in a reposi
    - **PostgreSQL** — Railway's PostgreSQL service.
    - **Redis** — Railway's Redis service.
 3. Set the Gateway root directory to `/` (or `/products/litellm-novita-gateway` if publishing this monorepo).
-4. Add these Gateway variables in the template settings:
+4. Add these Gateway variables in the template settings. Copy the description into Railway's **Description** field:
 
-| Variable | Template value |
+| Variable | Template value | Description |
+| --- | --- | --- |
+| `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` | Private PostgreSQL connection used by LiteLLM for virtual keys, budgets, configuration, and usage logs. Automatically provided by the Postgres service; do not enter a URL manually. |
+| `REDIS_URL` | `${{Redis.REDIS_URL}}` | Private Redis connection used for LiteLLM response caching. Automatically provided by the Redis service; do not enter a URL manually. |
+| `NOVITA_API_KEY` | Required user input | Novita AI API key used for all model requests. Get one at https://novita.ai/?ref=mzblm2z&utm_source=affiliate |
+| `LITELLM_MASTER_KEY` | `${{secret(48)}}` | Automatically generated administrator key for the LiteLLM UI and management API. Store it securely and use virtual keys for applications. |
+| `LITELLM_SALT_KEY` | `${{secret(48)}}` | Automatically generated encryption key for stored credentials. Never change it after deployment or existing encrypted data may become unreadable. |
+| `STORE_MODEL_IN_DB` | `False` | Keeps model definitions in the checked-in configuration so the gateway remains restricted to approved Novita models. |
+
+Add descriptions to the variables supplied by the database services too; deployers should not need to edit their generated values.
+
+#### Postgres variable descriptions
+
+| Variable | Description |
 | --- | --- |
-| `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` |
-| `REDIS_URL` | `${{Redis.REDIS_URL}}` |
-| `NOVITA_API_KEY` | Required user input; description: `Get a key: https://novita.ai/?ref=mzblm2z&utm_source=affiliate` |
-| `LITELLM_MASTER_KEY` | `${{secret(48)}}` |
-| `LITELLM_SALT_KEY` | `${{secret(48)}}` |
-| `STORE_MODEL_IN_DB` | `False` |
+| `PGDATA` | Internal PostgreSQL data directory. Keep the template default; do not change it after data has been written. |
+| `PGHOST` | Private hostname of the PostgreSQL service, generated automatically by Railway. |
+| `PGPORT` | Internal PostgreSQL port. Keep the default PostgreSQL port unless the service image is explicitly reconfigured. |
+| `PGUSER` | PostgreSQL username exposed to connected services. Automatically configured by the template. |
+| `PGDATABASE` | PostgreSQL database name exposed to connected services. Automatically configured by the template. |
+| `PGPASSWORD` | PostgreSQL password exposed to connected services. Automatically generated; do not reuse or disclose it. |
+| `POSTGRES_DB` | Database created when PostgreSQL starts. Keep it aligned with `PGDATABASE`. |
+| `DATABASE_URL` | Complete private PostgreSQL connection URL consumed by LiteLLM. Automatically assembled by the Postgres service. |
+| `POSTGRES_USER` | PostgreSQL user created when the database starts. Keep it aligned with `PGUSER`. |
+| `SSL_CERT_DAYS` | Lifetime in days for the PostgreSQL service's generated SSL certificate. Keep the template default. |
+| `POSTGRES_PASSWORD` | Password assigned to `POSTGRES_USER`. Automatically generated; do not enter a shared password. |
+| `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` | Time Railway allows existing PostgreSQL connections to drain during a deployment. Keep the template default. |
+
+#### Redis variable descriptions
+
+| Variable | Description |
+| --- | --- |
+| `REDISHOST` | Private hostname of the Redis service, generated automatically by Railway. |
+| `REDISPORT` | Internal Redis port, generated automatically by Railway. |
+| `REDISUSER` | Redis username used by clients on the private Railway network. |
+| `REDIS_URL` | Complete private Redis connection URL consumed by LiteLLM. Automatically assembled by the Redis service. |
+| `REDISPASSWORD` | Redis password exposed for compatibility with clients using separate connection fields. Automatically generated. |
+| `REDIS_PASSWORD` | Password required by the Redis server. Automatically generated; do not reuse or disclose it. |
 
 5. Confirm only the Gateway has a generated public domain and publish. The repository already configures the health check and listening port through `railway.json`.
 
